@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site_settings.site_title|default:'Portfolio' }}{% endblock %}</title>
+    <meta name="description" content="{{ site_settings.seo_description|default:'Developer portfolio website built with Django.' }}">
+    <meta name="keywords" content="{{ site_settings.seo_keywords|default:'portfolio,django,developer' }}">
+    <meta property="og:title" content="{{ site_settings.site_title|default:'Portfolio' }}">
+    <meta property="og:description" content="{{ site_settings.seo_description|default:'Developer portfolio website built with Django.' }}">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="{{ site_settings.og_image_url|default:'' }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ site_settings.site_title|default:'Portfolio' }}">
+    <meta name="twitter:description" content="{{ site_settings.seo_description|default:'Developer portfolio website built with Django.' }}">
+    <meta name="twitter:image" content="{{ site_settings.og_image_url|default:'' }}">
+    <meta name="twitter:site" content="{{ site_settings.twitter_handle|default:'' }}">
+    <link rel="icon" type="image/png" href="https://media.licdn.com/dms/image/v2/D5603AQFRB4ETmji78g/profile-displayphoto-crop_800_800/B56ZwxDh3iGsAI-/0/1770349536442?e=1776297600&v=beta&t=M4g5G0wPHKt5yHLg_qc32HwoVxHkz_tY8RoTdLVBAPg">
+    <link rel="apple-touch-icon" href="https://media.licdn.com/dms/image/v2/D5603AQFRB4ETmji78g/profile-displayphoto-crop_800_800/B56ZwxDh3iGsAI-/0/1770349536442?e=1776297600&v=beta&t=M4g5G0wPHKt5yHLg_qc32HwoVxHkz_tY8RoTdLVBAPg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,500;10..48,600;10..48,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    {% block content %}{% endblock %}
+    {% if site_settings.analytics_domain %}
+    <script defer data-domain="{{ site_settings.analytics_domain }}" src="https://plausible.io/js/script.js"></script>
+    {% endif %}
+</body>
+</html>

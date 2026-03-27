@@ -1,0 +1,524 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ profile.full_name }} | Portfolio{% endblock %}
+
+{% block extra_head %}
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+{% endblock %}
+
+{% block content %}
+<div class="bg-shape bg-shape-a"></div>
+<div class="bg-shape bg-shape-b"></div>
+
+<header class="top-nav-wrap">
+    <nav class="top-nav container-nav">
+        <a href="#home" class="brand">
+            <img
+                class="brand-mark"
+                src="{{ profile_image_url }}"
+                alt="{{ profile.full_name }}"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';"
+            >
+            <span class="brand-fallback" aria-hidden="true">RM</span>
+            <span>{{ profile.full_name }}</span>
+        </a>
+        <button class="menu-toggle" aria-label="Toggle navigation" aria-controls="primary-nav" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="nav-panel" id="primary-nav">
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#summary">Summary</a></li>
+                <li><a href="#impact">Impact</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li class="nav-indicator-dot" aria-hidden="true"></li>
+            </ul>
+            <a class="btn btn-primary" href="https://drive.google.com/file/d/1RKyraHwEJR_hxKYpCRQ9fOAWlxoTOMMK/view?usp=sharing" target="_blank" rel="noreferrer">Resume</a>
+            <a class="btn btn-ghost" href="/admin/" target="_blank" rel="noreferrer">Admin</a>
+            <div class="theme-switcher" aria-label="Theme switcher">
+                <span class="theme-logo" aria-hidden="true"></span>
+                <select id="theme-select" class="theme-select" aria-label="Select website theme">
+                    <option value="auto">System Default</option>
+                    <option value="sunset">Sunset Glow</option>
+                    <option value="ocean">Ocean Blue</option>
+                    <option value="forest">Forest Green</option>
+                    <option value="midnight">Midnight Dark</option>
+                    <option value="aurora">Aurora Neon</option>
+                    <option value="desert">Desert Sand</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="container">
+    <section id="home" class="hero card reveal">
+        <div class="hero-layout">
+            <div class="hero-copy">
+                <p class="tag">Available for Freelance</p>
+                <h1>{{ profile.full_name }}</h1>
+                <h2>{{ profile.headline }}</h2>
+                <p class="intro">{{ profile.intro }}</p>
+                <div class="actions">
+                    <a class="btn btn-primary" href="{{ whatsapp_url }}" target="_blank" rel="noreferrer">Contact Me</a>
+                    {% if profile.resume_url %}
+                        <a class="btn btn-ghost" href="{{ profile.resume_url }}" target="_blank" rel="noreferrer">Resume</a>
+                    {% endif %}
+                </div>
+            </div>
+            <figure class="hero-photo-wrap">
+                <div class="hero-photo-frame">
+                    <img
+                        class="hero-photo"
+                        src="{{ profile_image_url }}"
+                        alt="Portrait of {{ profile.full_name }}"
+                        loading="eager"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';"
+                    >
+                    <div class="hero-photo-fallback" aria-hidden="true">{{ profile.full_name|slice:":1" }}</div>
+                </div>
+            </figure>
+        </div>
+        <ul class="meta">
+            <li><strong>Email:</strong> {{ profile.email }}</li>
+            {% if profile.phone %}
+                <li><strong>Phone:</strong> {{ profile.phone }}</li>
+            {% endif %}
+            <li><strong>Location:</strong> {{ profile.location }}</li>
+        </ul>
+    </section>
+
+    <section id="summary" class="card reveal delay-1">
+        <div class="section-head">
+            <h3>{{ about.title }}</h3>
+        </div>
+        <p class="section-copy">
+            {{ about.summary }}
+        </p>
+    </section>
+
+    <section id="impact" class="card reveal delay-1">
+        <div class="section-head">
+            <h3>Impact Snapshot</h3>
+        </div>
+        <div class="stats-grid">
+            {% for stat in impact_stats %}
+                <article class="stat-card tilt-card">
+                    <p class="stat-number" data-target="{{ stat.value }}" data-suffix="{{ stat.suffix }}">0</p>
+                    <p class="stat-label">{{ stat.label }}</p>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section id="skills" class="card reveal delay-1">
+        <div class="section-head">
+            <h3>Skills</h3>
+        </div>
+        <div class="skills-list">
+            {% for group in skill_groups %}
+                <article class="skill-row">
+                    <h4>{{ group.title }}</h4>
+                    <p>{{ group.items }}</p>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="card reveal delay-2">
+        <div class="section-head">
+            <h3>Focus Areas</h3>
+        </div>
+        <div class="focus-grid">
+            {% for focus in focus_areas %}
+                <article class="focus-card tilt-card">
+                    <h4>{{ focus.title }}</h4>
+                    <p>{{ focus.detail }}</p>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section id="projects" class="card reveal delay-2">
+        <div class="section-head">
+            <h3>Featured Projects</h3>
+        </div>
+        <div class="projects-grid">
+            {% for project in projects %}
+                <article class="project">
+                    {% if project.screenshot_url %}
+                        <img class="project-shot" src="{{ project.screenshot_url }}" alt="Screenshot of {{ project.title }}" loading="lazy">
+                    {% endif %}
+                    <h4>{{ project.title }}</h4>
+                    <p>{{ project.summary }}</p>
+                    {% if project.outcome %}
+                        <p class="project-outcome">{{ project.outcome }}</p>
+                    {% endif %}
+                    <p class="stack">{{ project.tech_stack }}</p>
+                    <div class="project-links">
+                        {% if project.live_url %}
+                            <a href="{{ project.live_url }}" target="_blank" rel="noreferrer">Live</a>
+                        {% endif %}
+                        {% if project.source_url %}
+                            <a href="{{ project.source_url }}" target="_blank" rel="noreferrer">Source</a>
+                        {% endif %}
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section id="education" class="card reveal delay-2">
+        <div class="section-head">
+            <h3>Education</h3>
+        </div>
+        <div class="timeline-grid">
+            {% for item in education %}
+                <article class="timeline-item">
+                    <h4>{{ item.degree }}</h4>
+                    <p>{{ item.institution }}</p>
+                    <p><strong>{{ item.score }}</strong> | {{ item.duration }}</p>
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="card reveal delay-2">
+        <div class="section-head">
+            <h3>Academic Achievements</h3>
+        </div>
+        <ul class="list-block">
+            {% for achievement in achievements %}
+                <li>{{ achievement }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="card reveal delay-2">
+        <div class="section-head">
+            <h3>Certifications</h3>
+        </div>
+        <ul class="list-block">
+            {% for certification in certifications %}
+                <li>{{ certification }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section id="contact" class="card reveal delay-2">
+        <div class="section-head">
+            <h3>Contact</h3>
+        </div>
+        {% if contact_success %}
+            <p class="form-success" role="status">Thank you. Your message has been sent successfully.</p>
+        {% endif %}
+        <p class="section-copy">Email: <a href="mailto:{{ profile.email }}">{{ profile.email }}</a></p>
+        {% if profile.phone %}
+            <p class="section-copy">Phone: <a href="tel:{{ profile.phone }}">{{ profile.phone }}</a></p>
+        {% endif %}
+        <form method="post" class="contact-form" novalidate>
+            {% csrf_token %}
+            {{ contact_form.honeypot }}
+            <div class="form-grid">
+                <label for="id_name">Name</label>
+                {{ contact_form.name }}
+                <label for="id_email">Email</label>
+                {{ contact_form.email }}
+                <label for="id_message">Message</label>
+                {{ contact_form.message }}
+            </div>
+            <button class="btn btn-primary" type="submit">Send Message</button>
+            {% if contact_form.errors %}
+                <p class="form-error" role="alert">Please correct the highlighted fields and try again.</p>
+            {% endif %}
+        </form>
+        <div class="actions contact-actions">
+            {% if linkedin_url %}
+                <a class="btn btn-ghost" href="{{ linkedin_url }}" target="_blank" rel="noreferrer">LinkedIn</a>
+            {% endif %}
+            {% if github_url %}
+                <a class="btn btn-ghost" href="{{ github_url }}" target="_blank" rel="noreferrer">GitHub</a>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="card reveal delay-2 final-cta">
+        <h3>Let us build something impactful together.</h3>
+        <p>Open to software developer and web developer opportunities.</p>
+        <a class="btn btn-primary" href="mailto:{{ profile.email }}">Start a Conversation</a>
+    </section>
+</main>
+
+<button class="back-to-top" type="button" aria-label="Back to top">Top</button>
+
+<script>
+    document.documentElement.style.scrollBehavior = "smooth";
+
+    const topNav = document.querySelector(".top-nav");
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navList = document.querySelector(".nav-links");
+    const indicatorDot = document.querySelector(".nav-indicator-dot");
+    const navLinks = [...document.querySelectorAll(".nav-links a[href^='#']")];
+    let indicatorSpringTimeout;
+    let lastIndicatorX = 0;
+
+    const moveIndicator = (activeLink) => {
+        if (!activeLink || !indicatorDot || window.innerWidth <= 700) {
+            navList.classList.remove("indicator-visible");
+            return;
+        }
+
+        const x = activeLink.offsetLeft + (activeLink.offsetWidth / 2) - 4;
+        const distance = Math.abs(x - lastIndicatorX);
+        lastIndicatorX = x;
+        navList.style.setProperty("--indicator-x", `${x}px`);
+        navList.classList.add("indicator-visible");
+
+        indicatorDot.classList.remove("spring-soft", "spring-bouncy");
+        void indicatorDot.offsetWidth;
+        indicatorDot.classList.add(distance > 70 ? "spring-bouncy" : "spring-soft");
+        clearTimeout(indicatorSpringTimeout);
+        indicatorSpringTimeout = setTimeout(() => {
+            indicatorDot.classList.remove("spring-soft", "spring-bouncy");
+        }, 420);
+    };
+
+    menuToggle.addEventListener("click", () => {
+        const open = topNav.classList.toggle("menu-open");
+        menuToggle.setAttribute("aria-expanded", String(open));
+    });
+
+    let navIsScrolled = false;
+    const SCROLL_ON = 90;
+    const SCROLL_OFF = 50;
+
+    const syncNavScrollState = () => {
+        const y = window.scrollY;
+        if (!navIsScrolled && y > SCROLL_ON) {
+            navIsScrolled = true;
+            topNav.classList.add("nav-scrolled");
+        } else if (navIsScrolled && y < SCROLL_OFF) {
+            navIsScrolled = false;
+            topNav.classList.remove("nav-scrolled");
+        }
+    };
+
+    syncNavScrollState();
+    window.addEventListener("scroll", syncNavScrollState, { passive: true });
+
+    navLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+            topNav.classList.remove("menu-open");
+            menuToggle.setAttribute("aria-expanded", "false");
+        });
+    });
+
+    const sections = navLinks
+        .map((link) => document.querySelector(link.getAttribute("href")))
+        .filter(Boolean);
+
+    const setActiveNav = (sectionId) => {
+        let activeLink = null;
+        navLinks.forEach((link) => {
+            const isActive = link.getAttribute("href") === `#${sectionId}`;
+            link.classList.toggle("active", isActive);
+            if (isActive) {
+                activeLink = link;
+            }
+        });
+        moveIndicator(activeLink);
+    };
+
+    const navObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setActiveNav(entry.target.id);
+                }
+            });
+        },
+        { threshold: 0.4, rootMargin: "-25% 0px -55% 0px" }
+    );
+
+    sections.forEach((section) => navObserver.observe(section));
+    setActiveNav("home");
+
+    window.addEventListener("resize", () => {
+        const activeLink = navLinks.find((link) => link.classList.contains("active"));
+        moveIndicator(activeLink);
+    });
+
+    const themeSelect = document.querySelector("#theme-select");
+    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+    let themeTransitionTimer;
+
+    const runThemeTransition = () => {
+        document.body.classList.remove("theme-animate");
+        void document.body.offsetWidth;
+        document.body.classList.add("theme-animate");
+        clearTimeout(themeTransitionTimer);
+        themeTransitionTimer = setTimeout(() => {
+            document.body.classList.remove("theme-animate");
+        }, 520);
+    };
+
+    const resolveTheme = (themeName) => {
+        if (themeName === "auto") {
+            return systemPrefersDark.matches ? "midnight" : "sunset";
+        }
+        return themeName;
+    };
+
+    const applyTheme = (themeName, options = {}) => {
+        const { persist = true, animate = true } = options;
+        const appliedTheme = resolveTheme(themeName);
+
+        if (animate) {
+            runThemeTransition();
+        }
+
+        document.body.setAttribute("data-theme", appliedTheme);
+        document.body.setAttribute("data-theme-mode", themeName);
+
+        if (persist) {
+            localStorage.setItem("portfolio-theme", themeName);
+        }
+
+        if (themeSelect) {
+            themeSelect.value = themeName;
+        }
+    };
+
+    const savedTheme = localStorage.getItem("portfolio-theme") || "auto";
+    applyTheme(savedTheme, { animate: false });
+
+    if (themeSelect) {
+        themeSelect.addEventListener("change", (event) => {
+            applyTheme(event.target.value, { animate: true });
+        });
+    }
+
+    systemPrefersDark.addEventListener("change", () => {
+        const savedMode = localStorage.getItem("portfolio-theme") || "auto";
+        if (savedMode === "auto") {
+            applyTheme("auto", { animate: true });
+        }
+    });
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("is-visible");
+                }
+            });
+        },
+        { threshold: 0.16 }
+    );
+
+    document.querySelectorAll(".reveal").forEach((section) => {
+        observer.observe(section);
+    });
+
+    const animateNumber = (el) => {
+        const target = Number(el.dataset.target || 0);
+        const suffix = el.dataset.suffix || "";
+        const hasDecimal = String(target).includes(".");
+        const duration = 1300;
+        const start = performance.now();
+
+        const update = (now) => {
+            const progress = Math.min((now - start) / duration, 1);
+            const value = target * (1 - Math.pow(1 - progress, 3));
+            el.textContent = hasDecimal ? value.toFixed(2) + suffix : Math.round(value) + suffix;
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            }
+        };
+
+        requestAnimationFrame(update);
+    };
+
+    const statObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting && !entry.target.dataset.animated) {
+                    entry.target.dataset.animated = "1";
+                    animateNumber(entry.target);
+                }
+            });
+        },
+        { threshold: 0.5 }
+    );
+
+    document.querySelectorAll(".stat-number").forEach((stat) => {
+        statObserver.observe(stat);
+    });
+
+    const heroPhoto = document.querySelector(".hero-photo");
+    if (heroPhoto) {
+        const applySmartCrop = () => {
+            if (!heroPhoto.naturalWidth || !heroPhoto.naturalHeight) {
+                return;
+            }
+
+            const ratio = heroPhoto.naturalWidth / heroPhoto.naturalHeight;
+            let verticalFocus = "22%";
+
+            if (ratio < 0.8) {
+                verticalFocus = "18%";
+            } else if (ratio > 1.1) {
+                verticalFocus = "30%";
+            }
+
+            heroPhoto.style.objectPosition = `50% ${verticalFocus}`;
+        };
+
+        if (heroPhoto.complete) {
+            applySmartCrop();
+        } else {
+            heroPhoto.addEventListener("load", applySmartCrop, { once: true });
+        }
+    }
+
+    const supportsHover = window.matchMedia("(hover: hover)").matches;
+    if (supportsHover) {
+        const cards = document.querySelectorAll(".tilt-card");
+        cards.forEach((card) => {
+            card.addEventListener("mousemove", (event) => {
+                const rect = card.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                const rotateX = ((y / rect.height) - 0.5) * -6;
+                const rotateY = ((x / rect.width) - 0.5) * 6;
+                card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            card.addEventListener("mouseleave", () => {
+                card.style.transform = "perspective(900px) rotateX(0) rotateY(0)";
+            });
+        });
+    }
+
+    const backToTopButton = document.querySelector(".back-to-top");
+    const syncBackToTop = () => {
+        if (!backToTopButton) {
+            return;
+        }
+        backToTopButton.classList.toggle("visible", window.scrollY > 380);
+    };
+
+    syncBackToTop();
+    window.addEventListener("scroll", syncBackToTop, { passive: true });
+    if (backToTopButton) {
+        backToTopButton.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
+</script>
+{% endblock %}
