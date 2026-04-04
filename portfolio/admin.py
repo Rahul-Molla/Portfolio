@@ -12,6 +12,7 @@ from .models import (
 	SiteSettings,
 	Skill,
 	SkillCategory,
+	UGCNetPYQ,
 )
 
 
@@ -84,3 +85,11 @@ class ContactMessageAdmin(admin.ModelAdmin):
 	list_display = ("name", "email", "is_read", "created_at")
 	list_filter = ("is_read", "created_at")
 	search_fields = ("name", "email", "message")
+
+
+@admin.register(UGCNetPYQ)
+class UGCNetPYQAdmin(admin.ModelAdmin):
+	list_display = ("paper", "subject", "year", "correct_option", "is_active", "order")
+	list_filter = ("paper", "subject", "year", "is_active")
+	search_fields = ("subject", "question_text", "solution", "explanation")
+	list_editable = ("order", "is_active")

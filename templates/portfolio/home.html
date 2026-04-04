@@ -31,12 +31,17 @@
         <div class="nav-panel" id="primary-nav">
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
-                <li><a href="#summary">Summary</a></li>
-                <li><a href="#impact">Impact</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#education">Education</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li class="nav-dropdown nav-pyq-dropdown">
+                    <button type="button" class="nav-cta-btn nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">UGC NET PYQ</button>
+                    <div class="nav-dropdown-panel pyq-dropdown-panel" aria-label="UGC NET PYQ papers">
+                        <a href="{% url 'ugc_net_pyq' %}?paper=paper-1">
+                            <span>Paper 1</span>
+                        </a>
+                        <a href="{% url 'ugc_net_pyq' %}?paper=paper-2">
+                            <span>Paper 2</span>
+                        </a>
+                    </div>
+                </li>
                 <li class="nav-indicator-dot" aria-hidden="true"></li>
             </ul>
             <a class="btn btn-primary" href="https://drive.google.com/file/d/1RKyraHwEJR_hxKYpCRQ9fOAWlxoTOMMK/view?usp=sharing" target="_blank" rel="noreferrer">Resume</a>
@@ -292,6 +297,39 @@
     menuToggle.addEventListener("click", () => {
         const open = topNav.classList.toggle("menu-open");
         menuToggle.setAttribute("aria-expanded", String(open));
+    });
+
+    const navDropdowns = document.querySelectorAll(".nav-dropdown");
+    navDropdowns.forEach((dropdown) => {
+        const trigger = dropdown.querySelector(".nav-dropdown-trigger");
+        if (!trigger) {
+            return;
+        }
+
+        trigger.addEventListener("click", (event) => {
+            if (!window.matchMedia("(hover: hover)").matches) {
+                event.preventDefault();
+                const isOpen = dropdown.classList.toggle("is-open");
+                trigger.setAttribute("aria-expanded", String(isOpen));
+            }
+        });
+
+        dropdown.querySelectorAll(".nav-dropdown-panel a").forEach((link) => {
+            link.addEventListener("click", () => {
+                dropdown.classList.remove("is-open");
+                trigger.setAttribute("aria-expanded", "false");
+            });
+        });
+    });
+
+    document.addEventListener("click", (event) => {
+        navDropdowns.forEach((dropdown) => {
+            const trigger = dropdown.querySelector(".nav-dropdown-trigger");
+            if (trigger && !dropdown.contains(event.target)) {
+                dropdown.classList.remove("is-open");
+                trigger.setAttribute("aria-expanded", "false");
+            }
+        });
     });
 
     let navIsScrolled = false;

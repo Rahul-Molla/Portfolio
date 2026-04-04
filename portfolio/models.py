@@ -174,3 +174,39 @@ class ContactMessage(models.Model):
 
 	def __str__(self):
 		return f"{self.name} <{self.email}>"
+
+
+class UGCNetPYQ(models.Model):
+	PAPER_CHOICES = [
+		("paper-1", "Paper 1"),
+		("paper-2", "Paper 2 (Computer Science and Applications)"),
+	]
+
+	OPTION_CHOICES = [
+		("A", "Option A"),
+		("B", "Option B"),
+		("C", "Option C"),
+		("D", "Option D"),
+	]
+
+	paper = models.CharField(max_length=12, choices=PAPER_CHOICES, default="paper-1")
+	subject = models.CharField(max_length=120)
+	year = models.PositiveSmallIntegerField(default=2026)
+	question_text = models.TextField()
+	option_a = models.CharField(max_length=255)
+	option_b = models.CharField(max_length=255)
+	option_c = models.CharField(max_length=255)
+	option_d = models.CharField(max_length=255)
+	correct_option = models.CharField(max_length=1, choices=OPTION_CHOICES)
+	solution = models.TextField(help_text="Short solution or approach")
+	explanation = models.TextField(help_text="Detailed explanation")
+	is_active = models.BooleanField(default=True)
+	order = models.PositiveIntegerField(default=1)
+
+	class Meta:
+		ordering = ["paper", "subject", "-year", "order", "id"]
+		verbose_name = "UGC NET PYQ"
+		verbose_name_plural = "UGC NET PYQs"
+
+	def __str__(self):
+		return f"{self.get_paper_display()} | {self.subject} | {self.year}"
